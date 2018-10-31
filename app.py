@@ -1,11 +1,12 @@
+import secrets, os
 from datetime import datetime
 from flask import Flask, render_template, flash, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, UpdateAccountForm
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_login import LoginManager, UserMixin
-
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -154,6 +155,47 @@ def terms():
     return render_template('terms.html')
 
 
+@app.route('/account', methods=['GET', 'POST'])
+def account():
+
+    form = UpdateAccountForm()
+    if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.profile_image = picture_file
+        current_user.first_name = form.first_name.data
+        current_user.last_name = form.last_name.data
+        current_user.email = form.email.data
+        current_user.address1 = form.address1.data
+        current_user.address2 = form.address2.data
+        current_user.city = form.city.data
+        current_user.postal_code = form.postal_code.data
+        current_user.state = form.state.data
+        current_user.country = form.country.data
+        current_user.phone = form.phone.data
+        current_user.role = 0
+        # current_user.nda = 1
+
+        db.session.commit()
+        flash('Your account has been updated', 'success')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
+        form.email.data = current_user.email
+        form.address1.data = current_user.address1
+        form.address2.data = current_user.address2
+        form.city.data = current_user.city
+        form.postal_code.data = current_user.postal_code
+        form.state.data = current_user.state
+        form.country.data = current_user.country
+        form.phone.data = current_user.phone
+        
+    image_file = url_for('static', filename='profile_pics/' + current_user.profile_image)
+    return render_template('account.html', title='Account', 
+                            image_file=image_file, form=form)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -189,6 +231,20 @@ def login():
             flash('Login Unsuccessful. Please check your email and pasword', 'danger')
     return render_template('login.html', form=form, title='Login')
 
+
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+    #resize the image 
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+    # form_picture.save()
+
+    return picture_fn
 
 if __name__ == '__main__':
     app.run(debug=True)
