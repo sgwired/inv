@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from flask_login import current_user
 from inventor.models import User
@@ -40,7 +40,6 @@ class LoginForm(FlaskForm):
 
 
 class UpdateAccountForm(FlaskForm):
-
     first_name = StringField('First Name',
                              validators=[DataRequired(), Length(min=2, max=64)])
     last_name = StringField('Last Name',
@@ -61,3 +60,15 @@ class UpdateAccountForm(FlaskForm):
             email = User.query.filter_by(email=email.data).first()
             if email:
                 raise ValidationError('The email you selected is aready taken. Please choose a differrent one.')
+
+
+class IdeaForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    category = StringField('Category', validators=[DataRequired()])
+    company = StringField('Company', validators=[DataRequired])
+    featured_image = FileField('Featured Image', validators=[FileAllowed(['jpg', 'png'])])
+    secondary_image = FileField('Secondary Image', validators=[FileAllowed(['jpg', 'png'])])
+    primary_document = FileField('Primary Document', validators=[FileAllowed(['doc', 'pdf', 'xls'])])
+    secondary_document = FileField('Secondary Document', validators=[FileAllowed(['doc', 'pdf', 'xls'])])
+    submit = SubmitField('Create New Idea')

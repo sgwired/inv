@@ -56,12 +56,12 @@
     </div>
     <div class="col-md-4">
       <div class="content-section">
-        <h3>Our Sidebar</h3>
+        <h3>My Links</h3>
         <p class='text-muted'>You can put any information here you'd like.
           <ul class="list-group">
               {% if current_user.is_authenticated %}
-                                
-              <li class="list-group-item list-group-item-light"><a href="#">New Idea</a></li>
+              <li class="list-group-item list-group-item-light"><a href="#"">My Ideas</a></li>
+              <li class="list-group-item list-group-item-light"><a href="{{ url_for('new_idea') }}">Create New Idea</a></li>
               
               <li class="list-group-item list-group-item-light"><a href="{{ url_for('account') }}">Account</a></li>
               {% endif %}

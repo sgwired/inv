@@ -50,7 +50,6 @@ class Idea(db.Model):
     description = db.Column(db.Text, nullable=False)
     category = db.Column(db.String(64), nullable=False)
     company = db.Column(db.String(64), nullable=False)
-    title = db.Column(db.String(64), nullable=False)
     featured_image = db.Column(db.String(20), nullable=False, default='default_image.jpg')
     secondary_image = db.Column(db.String(20), nullable=False, default='default_image.jpg')
     primary_document = db.Column(db.String(20))

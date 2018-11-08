@@ -3,7 +3,7 @@ import secrets
 from PIL import Image
 from flask import render_template, flash, redirect, url_for, request
 from inventor import app, db, bcrypt
-from inventor.forms import RegistrationForm, LoginForm, UpdateAccountForm
+from inventor.forms import RegistrationForm, LoginForm, UpdateAccountForm, IdeaForm
 from inventor.models import User, Idea, Comment, Note
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -167,3 +167,18 @@ def save_picture(form_picture):
     # form_picture.save()
 
     return picture_fn
+
+
+@app.route('/idea/new', methods=['GET', 'POST'])
+@login_required
+def new_idea():
+    form = IdeaForm()
+    if form.validate_on_submit():
+        
+        # db.session.add(user)
+        # db.session.commit()
+
+        flash(f'New Idea created for ', 'success')
+        return redirect(url_for('home'))
+
+    return render_template('create_idea.html', form=form, title='New Idea')
