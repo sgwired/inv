@@ -51,6 +51,7 @@ def index():
 
 
 @app.route('/home')
+@login_required
 def home():
     return render_template('home.html', ideas=ideas)
 
@@ -66,6 +67,7 @@ def terms():
 
 
 @app.route('/account', methods=['GET', 'POST'])
+@login_required
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
@@ -107,6 +109,8 @@ def account():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm()
 
     if form.validate_on_submit():
@@ -122,13 +126,15 @@ def register():
         db.session.commit()
 
         flash(f'Account created for {form.first_name.data} {form.last_name.data}', 'success')
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
 
     return render_template('register.html', form=form, title='Register')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -138,8 +144,14 @@ def login():
             flash(f'Welcome back {user.first_name}', 'success')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash('Login Unsuccessful. Please check your email and pasword', 'danger')
+            flash('Login Unsuccessful. Please check your email and password', 'danger')
     return render_template('login.html', form=form, title='Login')
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 def save_picture(form_picture):

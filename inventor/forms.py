@@ -24,7 +24,13 @@ class RegistrationForm(FlaskForm):
     country = StringField('Country', validators=[DataRequired()])
     phone = StringField('Phone Number', validators=[DataRequired()])
     submit = SubmitField('Sign Up')
+    
+    def validate_email(self, email):
+        email = User.query.filter_by(email=email.data).first()
 
+        if email:
+            raise ValidationError('The email you selected is aready taken. Please choose a differrent one.')
+            
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
