@@ -53,6 +53,7 @@ def index():
 @app.route('/home')
 @login_required
 def home():
+    ideas = Idea.query.filter_by(user_id=current_user.id).all()
     return render_template('home.html', ideas=ideas)
 
 
@@ -174,9 +175,13 @@ def save_picture(form_picture):
 def new_idea():
     form = IdeaForm()
     if form.validate_on_submit():
-        
-        # db.session.add(user)
-        # db.session.commit()
+        idea = Idea(title=form.title.data,
+                description=form.description.data,
+                category=form.category.data,
+                company=form.company.data,
+                user_id=current_user.id)
+        db.session.add(idea)
+        db.session.commit()
 
         flash(f'New Idea created for ', 'success')
         return redirect(url_for('home'))
