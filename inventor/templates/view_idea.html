@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+    <article class="media content-section">
+    <div class="media">
+            <img class="rounded float-left" src="{{ url_for('static', filename='profile_pics/' + idea.featured_image) }}">
+            <img class="img-thumbnail" src="{{ url_for('static', filename='profile_pics/' + idea.secondary_image) }}">
+        </div>
+      <div class="media-body">
+        <div class="article-metadata">
+          <small class="text-muted">{{ idea.date_created }}</small>
+        </div>
+        <h2 class="article-title">{{ idea.title }}</h2>
+          <p class="article-title">{{ idea.category }}</p>
+        <p class="article-content">{{ idea.description }}</p>
+      </div>
+    </article>
+
+
+{% endblock content %}
+
+

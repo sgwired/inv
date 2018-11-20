@@ -60,7 +60,7 @@
         <p class='text-muted'>You can put any information here you'd like.
           <ul class="list-group">
               {% if current_user.is_authenticated %}
-              <li class="list-group-item list-group-item-light"><a href="#"">My Ideas</a></li>
+              <li class="list-group-item list-group-item-light"><a href="{{ url_for('home') }}">My Ideas</a></li>
               <li class="list-group-item list-group-item-light"><a href="{{ url_for('new_idea') }}">Create New Idea</a></li>
               
               <li class="list-group-item list-group-item-light"><a href="{{ url_for('account') }}">Account</a></li>

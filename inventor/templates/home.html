@@ -2,16 +2,24 @@
 {% block content %}
    {% for idea in ideas %}
     <article class="media content-section">
+      <div class="media-body">       
+          <img class="idea-img" src="{{ url_for('static', filename='profile_pics/' + idea.featured_image) }}">
+      </div>
       <div class="media-body">
         <div class="article-metadata">
-          <a class="mr-2" href="#">{{ idea.inventor.first_name }} {{ idea.inventor.last_name }}</a>
-          <small class="text-muted">{{ idea.date_created }}</small>
+          {{ idea.inventor.first_name }} {{ idea.inventor.last_name }}
+          <small class="text-muted">Submitted: {{ idea.date_created }}</small>
         </div>
-        <h2><a class="article-title" href="#">{{ idea.title }}</a></h2>
-          <h3><a class="article-title" href="#">{{ idea.category }}</a></h3>
-        <p  ssssclass="article-content">{{ idea.description }}</p>
+        <h2><a class="article-title" href="{{ url_for('view_idea', id=idea.id) }}">{{ idea.title }}</a></h2>
+          <h3 class="article-title">{{ idea.category }}</h3>
+        <p class="article-content">{{ idea.description }}</p>
+        <div class="btn-group">
+            <button type="button" class="btn btn-sm btn-outline-secondary"><a class="article-title" href="{{ url_for('view_idea', id=idea.id) }}">View</a></button>
+            <button type="button" class="btn btn-sm btn-outline-secondary"><a class="article-title" href="{{ url_for('edit_idea', id=idea.id) }}">Edit</a></button>
+          </div>
       </div>
     </article>
+
 {%  endfor %}
 
 {% endblock content %}

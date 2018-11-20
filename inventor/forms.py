@@ -72,3 +72,15 @@ class IdeaForm(FlaskForm):
     primary_document = FileField('Primary Document', validators=[FileAllowed(['doc', 'pdf', 'xls'])])
     secondary_document = FileField('Secondary Document', validators=[FileAllowed(['doc', 'pdf', 'xls'])])
     submit = SubmitField('Create New Idea')
+
+
+class EditIdeaForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    category = StringField('Category', validators=[DataRequired()])
+    company = StringField('Company', validators=[DataRequired()])
+    featured_image = FileField('Featured Image', validators=[FileAllowed(['jpg', 'png'])])
+    secondary_image = FileField('Secondary Image', validators=[FileAllowed(['jpg', 'png'])])
+    primary_document = FileField('Primary Document', validators=[FileAllowed(['doc', 'pdf', 'xls'])])
+    secondary_document = FileField('Secondary Document', validators=[FileAllowed(['doc', 'pdf', 'xls'])])
+    submit = SubmitField('Edit')
