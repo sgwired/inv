@@ -193,9 +193,24 @@ def new_idea():
 @login_required
 def edit_idea(id):
     form = EditIdeaForm()
+    idea = Idea.query.filter_by(id=id, user_id=current_user.id).first_or_404()
 
     if form.validate_on_submit():
-        idea = Idea()
+        idea = Idea(title=form.title.data,
+                description=form.description.data,
+                category=form.category.data,
+                company=form.company.data,
+                user_id=current_user.id)
+    elif request.method == 'GET':
+        form.title.data = idea.title
+        form.description.data = idea.description
+        form.category.data = idea.category
+        form.company.data = idea.company
+        form.featured_image.data = idea.featured_image
+        form.secondary_image.data = idea.secondary_image
+        form.primary_document.data = idea.primary_document
+        form.secondary_document.data = idea.secondary_document
+
     return render_template('edit_idea.html', form=form)
 
 
