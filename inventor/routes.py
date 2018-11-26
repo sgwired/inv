@@ -8,39 +8,6 @@ from inventor.models import User, Idea, Comment, Note
 from flask_login import login_user, current_user, logout_user, login_required
 
 
-ideas = [
-    {
-        'inventor': 'Jane Doe',
-        'title': 'First Idea',
-        'description': 'This is my cool idea',
-        'category': 'Boys',
-        'date_submitted': 'October 1, 2018'
-    },
-    {
-        'inventor': 'Jane Doe',
-        'title': 'Second Idea',
-        'description': 'This is my cool idea',
-        'category': 'Boys',
-        'date_submitted': 'October 1, 2018'
-    },
-    {
-        'inventor': 'Jill Blue',
-        'title': 'Jill Idea 1',
-        'description': 'Some idea',
-        'category': 'Boys & Girls',
-        'date_submitted': 'October 12, 2018'
-    },
-    {
-        'inventor': 'Steve Blue',
-        'title': 'Steve Idea Four',
-        'description': 'Forth thing I created',
-        'category': 'Outdoor',
-        'date_submitted': 'October 12, 2018'
-    }
-
-]
-
-
 def load_user(user_id):
     return User.query.get(int(user_id))
 
@@ -175,11 +142,31 @@ def save_picture(form_picture):
 def new_idea():
     form = IdeaForm()
     if form.validate_on_submit():
+        if form.featured_image.data:
+            featured_image = save_picture(form.featured_image.data)
+        else:
+            featured_image = ''
+        if form.secondary_image.data:
+            secondary_image = save_picture(form.secondary_image.data)
+        else:
+            secondary_image = ''
+        if form.primary_document.data:
+            primary_document = save_picture(form.primary_document.data)
+        else:
+            primary_document = ''
+        if form.secondary_document.data:
+            secondary_document = save_picture(form.secondary_document.data)
+        else:
+            secondary_document = ''
         idea = Idea(title=form.title.data,
                 description=form.description.data,
                 category=form.category.data,
                 company=form.company.data,
-                user_id=current_user.id)
+                user_id=current_user.id,
+                featured_image=featured_image,
+                secondary_image=secondary_image,
+                primary_document=primary_document,
+                secondary_document=secondary_document)
         db.session.add(idea)
         db.session.commit()
 
@@ -196,6 +183,7 @@ def edit_idea(id):
     idea = Idea.query.filter_by(id=id, user_id=current_user.id).first_or_404()
 
     if form.validate_on_submit():
+
         idea = Idea(title=form.title.data,
                 description=form.description.data,
                 category=form.category.data,
